@@ -1,44 +1,190 @@
-import sw from "remove-stopwords";
-function convert(product, query) {
-  query = query.toLowerCase();
-  product = product.toLowerCase();
+import reader from "xlsx";
+import fs, { copyFileSync } from "fs";
 
-  query = query.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”]/g, " ");
-  product = product.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”]/g, " ");
+import * as sw from "stopword";
+// var natural = require('natural');
 
-  query = query.replace(/[0-9]+/g, " ");
+import natural from "natural";
 
-  query = query.replace(/ +/g, " ").trim();
-  product = product.replace(/ +/g, " ").trim();
+// import PorterStemmer from "natural/lib/natural/stemmers/porter_stemmer.js";
+// PorterStemmer.attach();
 
-  query = sw.removeStopwords(query.split(" "), product.split(" "));
-  console.log(product.split(" "));
-  console.log("the query after product words removal\n " + query);
-  query = sw.removeStopwords(query, ["nbe", "al ahly", "via", "service"]);
-
-  product = sw.removeStopwords(product.split(" ")).join(".");
-  product = product.replace("al.ahly.net", "alAhlyNet");
-  product = product.replace("al.ahly", "alAhly");
-  product = product.replace(".nbe", "");
-  query = sw.removeStopwords(query).join(".");
-  query = query.replace("al.ahly.net", "");
-  query = query.replace("al.ahly", "");
-  query = query.replace(".nbe", "");
-
-  // query = query.replace("'s", "");
-  // query = query.replace("/", "O");
-  query = query.replace(/\.+/g, ".");
-  query = query.replace(/\.s\./g, ".");
-  query = query.replace("Information", "info");
-  query = query.replace("required", "req");
-  query = query.replace("subscription", "sub");
-  query = query.replace("application", "app");
-  query = query.replace("maximum", "max");
-  query = query.replace("minimum", "min");
-
-  return "ans.faqs." + product + "." + query;
+class ReadXLsFile {
+  readFile(path) {
+    const file = reader.readFile(path);
+    const sheets = file.SheetNames;
+    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
+    return temp;
+  }
 }
-let product = "Accounts, certificates and saving pools";
-let query =
-  "What are the terms of the foreign currency certificates issued by NBE?";
-console.log(convert(product, query));
+
+class WriteXLsFile {
+  writeToFile(fileName, data) {
+    let { JsonEntries, queriesEntries, answerEntries } =
+      this.createJsonEntries(data);
+    // const sheet = reader.utils.json_to_sheet(JsonEntries);
+    const queries = reader.utils.json_to_sheet(queriesEntries);
+    const answers = reader.utils.json_to_sheet(answerEntries);
+    // let stream = reader.stream.to_csv(sheet);
+    let queryStream = reader.stream.to_csv(queries);
+    let answersStream = reader.stream.to_csv(answers);
+    let path = this.createPath(fileName);
+    // stream.pipe(fs.createWriteStream(path));
+    queryStream.pipe(fs.createWriteStream("./defaultShortDescription.csv"));
+    answersStream.pipe(fs.createWriteStream("./ARShortDescription.csv"));
+    // console.log("File created on path " + path);
+    console.log("File created on path ./queryRB.csv");
+    console.log("File created on path ./answersRB.csv");
+  }
+  createPath(fileName) {
+    fileName = fileName.trim();
+    return `./${fileName}.csv`;
+  }
+  entryFormate() {
+    let answerIntentFormat = {
+      query: "",
+      topIntent: "",
+      conversationName: "",
+      description: "",
+      answer: "",
+      enabled: true,
+    };
+    return answerIntentFormat;
+  }
+  defaultShortDescription() {
+    let answerIntentFormat = {
+      languageTag: "default",
+      key: "",
+      message: "",
+      annotation: "",
+    };
+    return answerIntentFormat;
+  }
+  ARshortDescription() {
+    let answerIntentFormat = {
+      languageTag: "ar",
+      key: "",
+      message: "",
+      annotation: "",
+    };
+    return answerIntentFormat;
+  }
+  createJsonEntries(data) {
+    let JsonEntries = [];
+    let queriesEntries = [];
+    let answerEntries = [];
+    data.forEach((element) => {
+      // repeat every row twice to solve the increase the utterances
+      if (element.query) {
+        for (let index = 0; index < 2; index++) {
+          let answerIntent = this.entryFormate();
+          let ENDescription = this.defaultShortDescription();
+          let ARdescription = this.ARshortDescription();
+
+          answerIntent.topIntent =
+            "ANS.FAQs." +
+            this.createManipulatedQuery(
+              element.product.trim(),
+              element.query.trim()
+            ); //intenName.replace(/[^A-Z0-9]+/gi, ".");
+
+          ENDescription.key = answerIntent.topIntent;
+          ENDescription.message =
+            element.answer.slice(0, 100).replace("”", "") + "...";
+
+          ARdescription.key = answerIntent.topIntent;
+          ARdescription.message =
+            element.answerAR.slice(0, 100).replace("”", "") + "...";
+
+          // answerIntent.conversationName =
+          //   "FAQ: " + retailCorpFlag + element.query; // "FAQs: " + element.product + "#" //answerIntent.topIntent; //
+          // answerIntent.answer = element.answer.replace("”", "");
+
+          // JsonEntries.push(answerIntent);
+          queriesEntries.push(ENDescription);
+          answerEntries.push(ARdescription);
+        }
+      }
+    });
+    return {
+      JsonEntries,
+      queriesEntries,
+      answerEntries,
+    };
+  }
+
+  createManipulatedQuery(product, query) {
+    if (!query) {
+      return "NO QUERY";
+    }
+
+    query = query.toLowerCase();
+    product = product.toLowerCase();
+
+    query = query.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”+]/g, " ");
+    query = query.replace(/\s+/g, " ").trim();
+
+    product = product.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”]/g, " ");
+    product = product.replace(/\s+/g, " ").trim();
+
+    query = query.replace(/[0-9]+/g, " ");
+    query = query.replace("information", "info");
+    query = query.replace("required", "req");
+    query = query.replace("application", "app");
+    query = query.replace("maximum", "max");
+    query = query.replace("minimum", "min");
+    query = query.replace("retail", "ret");
+    query = query.replace("corporates", "corp");
+    query = query.replace("corporate", "corp");
+    query = query.replace("certificates", "cert");
+    query = query.replace("certificate", "cert");
+    query = query.replace("accounts", "acc");
+    query = query.replace("account", "acc");
+
+    query = query
+      .split(" ")
+      .filter((word) => !product.split(" ").includes(word));
+
+    query = sw.removeStopwords(query, [
+      "nbe",
+      "al ahly",
+      "via",
+      "service",
+      "services",
+      "corporates",
+      "corporate",
+      "does",
+    ]);
+    query = sw.removeStopwords(query);
+    query = query.filter((item, index) => query.indexOf(item) === index);
+    query = query.map((word) => natural.PorterStemmer.stem(word)); //
+    query = query.join(".");
+
+    product = sw.removeStopwords(product.split(" ")).join(".");
+    product = product.replace("al.ahly.net", "alAhlyNet");
+    product = product.replace("al.ahly.platinum", "alAhlyPlatinum");
+    product = product.replace("al.ahly.points", "alAhlyPoints");
+    product = product.replace(".e.", ".e-");
+    product = product.replace("al.ahly.e-shopping", "alAhlyE-Shopping");
+    product = product.replace("al.ahly.phonecash", "alAhlyPhoneCash");
+    product = product.replace("retail", "ret");
+    product = product.replace("corporates", "corp");
+    product = product.replace("corporate", "corp");
+    product = product.replace("certificates", "cert");
+    product = product.replace("certificate", "cert");
+    product = product.replace("accounts", "acc");
+    product = product.replace("account", "acc");
+
+    query = query.replace(/\.+/g, ".");
+    query = query.replace(/\.s\./g, ".");
+
+    return product + "." + query;
+  }
+}
+
+let filePath = "./nbe QandA ar and en.xlsx";
+let readFile = new ReadXLsFile();
+let writeToFile = new WriteXLsFile();
+
+let data = readFile.readFile(filePath);
+writeToFile.writeToFile("FAQsStemmingFinal", data);

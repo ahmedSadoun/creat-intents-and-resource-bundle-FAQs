@@ -201,8 +201,8 @@ ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.when.us,أسئلة شائع�
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.when.us,أسئلة شائعة:  متي يمكنني استخدام خدمة الأهلي نت؟,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.first.time.app,أسئلة شائعة:  هل يمكنني الدخول لأول مرة من خلال تطبيق الموبيل البنكي؟,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.first.time.app,أسئلة شائعة:  هل يمكنني الدخول لأول مرة من خلال تطبيق الموبيل البنكي؟,
-ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.password”.chang,"أسئلة شائعة:  هل يمكنني تغيير كلمة مرور تسجيل الدخول "" Login Password""؟",
-ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.password”.chang,"أسئلة شائعة:  هل يمكنني تغيير كلمة مرور تسجيل الدخول "" Login Password""؟",
+ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.password.chang,"أسئلة شائعة:  هل يمكنني تغيير كلمة مرور تسجيل الدخول "" Login Password""؟",
+ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.login.password.chang,"أسئلة شائعة:  هل يمكنني تغيير كلمة مرور تسجيل الدخول "" Login Password""؟",
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.happen.incorrect.login.password.enter,"أسئلة شائعة:  ماذا يحدث إذا تم ادخال كلمة مرور تسجيل الدخول "" Login Password"" بطريقة غير صحيحة؟",
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.happen.incorrect.login.password.enter,"أسئلة شائعة:  ماذا يحدث إذا تم ادخال كلمة مرور تسجيل الدخول "" Login Password"" بطريقة غير صحيحة؟",
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.ret.web.browser.us.access,أسئلة شائعة:  أي من خدمات المتصفح يمكن استخدامها؟,
@@ -343,8 +343,8 @@ ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.subscrib,أسئلة شائ�
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.subscrib,أسئلة شائعة:   كيف يمكنني الاشتراك في خدمة الأهلي نت/ الأهلي موبايل؟,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.password.us,أسئلة شائعة:   كيف يمكنني الحصول على كلمة المرور لخدمة الأهلي نت/ الأهلي موبايل؟ ,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.password.us,أسئلة شائعة:   كيف يمكنني الحصول على كلمة المرور لخدمة الأهلي نت/ الأهلي موبايل؟ ,
-ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.login.password”.chang,"أسئلة شائعة:   هل يمكنني تغيير كلمة المرور "" Login Password""؟",
-ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.login.password”.chang,"أسئلة شائعة:   هل يمكنني تغيير كلمة المرور "" Login Password""؟",
+ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.login.password.chang,"أسئلة شائعة:   هل يمكنني تغيير كلمة المرور "" Login Password""؟",
+ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.login.password.chang,"أسئلة شائعة:   هل يمكنني تغيير كلمة المرور "" Login Password""؟",
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.happen.incorrect.login.password.enter,أسئلة شائعة:   ماذا يحدث إذا تم ادخال كلمة المرور بطريقة غير صحيحة؟,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.happen.incorrect.login.password.enter,أسئلة شائعة:   ماذا يحدث إذا تم ادخال كلمة المرور بطريقة غير صحيحة؟,
 ar,systemFlowName_ANS.FAQs.alAhlyNet.nbe.mobile.corp.web.browser.us.access,أسئلة شائعة:   أي من انواع المتصفحات يمكن استخدامها؟,

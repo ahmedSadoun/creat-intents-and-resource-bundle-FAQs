@@ -80,7 +80,6 @@ class WriteXLsFile {
           let answerIntent = this.entryFormate();
           let queryRBFormat = this.RBQueryEntryFormate();
           let answerRBFormat = this.RBAnswerEntryFormate();
-          answerIntent.query = index === 0 ? element.query : element.queryAR; //
 
           answerIntent.topIntent =
             "ANS.FAQs." +
@@ -88,14 +87,31 @@ class WriteXLsFile {
               element.product.trim(),
               element.query.trim()
             ); //intenName.replace(/[^A-Z0-9]+/gi, ".");
+
+          var retailCorpFlag = answerIntent.topIntent.includes(".ret.")
+            ? index != 0
+              ? "Retail - "
+              : "أفراد - "
+            : answerIntent.topIntent.includes(".corp.")
+            ? index != 0
+              ? "Corp - "
+              : "شركات - "
+            : "";
+
+          answerIntent.query =
+            index != 0
+              ? retailCorpFlag + element.query.trim()
+              : retailCorpFlag + element.trnaslatedARQuery.trim(); // .substring(0, element.query.length - 1); //
+
           queryRBFormat.key = queryRBFormat.key + answerIntent.topIntent;
           queryRBFormat.message = queryRBFormat.message + element.queryAR;
 
           answerRBFormat.key = answerRBFormat.key + answerIntent.topIntent;
-          answerRBFormat.message = element.answerAR;
+          answerRBFormat.message = element.answerAR.replace("”", "");
 
-          answerIntent.conversationName = "FAQ: " + element.query; // "FAQs: " + element.product + "#" //answerIntent.topIntent; //
-          answerIntent.answer = element.answer;
+          answerIntent.conversationName =
+            "FAQ: " + retailCorpFlag + element.query; // "FAQs: " + element.product + "#" //answerIntent.topIntent; //
+          answerIntent.answer = element.answer.replace("”", "");
 
           JsonEntries.push(answerIntent);
           queriesEntries.push(queryRBFormat);
@@ -103,7 +119,11 @@ class WriteXLsFile {
         }
       }
     });
-    return { JsonEntries, queriesEntries, answerEntries };
+    return {
+      JsonEntries,
+      queriesEntries,
+      answerEntries,
+    };
   }
 
   createManipulatedQuery(product, query) {
@@ -114,7 +134,7 @@ class WriteXLsFile {
     query = query.toLowerCase();
     product = product.toLowerCase();
 
-    query = query.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'" +]/g, " ");
+    query = query.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”+]/g, " ");
     query = query.replace(/\s+/g, " ").trim();
 
     product = product.replace(/[\?\.,\/#!$%\^&\*;:{}=\-_`~()’'"”]/g, " ");
@@ -180,4 +200,4 @@ let readFile = new ReadXLsFile();
 let writeToFile = new WriteXLsFile();
 
 let data = readFile.readFile(filePath);
-writeToFile.writeToFile("FAQsStemmingFinal", data);
+writeToFile.writeToFile("intentsWithNewUtterances", data);
