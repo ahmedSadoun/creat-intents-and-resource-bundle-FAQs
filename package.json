@@ -1,0 +1,18 @@
+{
+  "name": "interpreting-retail-current-accounts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "eeh.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "natural": "^6.2.0",
+    "remove-stopwords": "^1.0.3",
+    "stopword": "^2.0.7",
+    "xlsx": "^0.18.5"
+  }
+}
